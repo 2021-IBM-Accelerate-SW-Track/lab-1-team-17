@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import TextField  from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -12,83 +12,44 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button'
 import { statement } from '@babel/template';
 
-const useStyles = makeStyles ((theme) => ({
-    root : {
-        flexGrow: 1,
-        margin: theme.spacing(1),
-        width: '25ch',
-    },
-    paper:{
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
 
-    },
-}));
+const Form = ({setInputText, todos, setTodos, inputText, setStatus}) => {
+    //javascript & functions
+    const inputTextHandler = (e) => {
+        console.log(e.target.value);
+        setInputText(e.target.value);
 
-
-
-const Form = () => {
-    const classes = useStyles();
-    const [state, setState] = React.useState({
-        status: '',
-
-    });
-
-    const handleChange = (event) => {
-        const status = event.target.status;
-        setState({
-            ...state,
-            [status]: event.target.value,
-        });
     };
+    const submitTodoHandler = (e) => {
+        e.preventDefault();
+        setTodos([
+            ...todos, {text: inputText, completed: false, id: Math.random() *1000}
+        ]);
+        setInputText(" ");
+    };
+    const statusHandler = (e) =>{
+        setStatus(e.target.value);
 
-    return(
-        <FormControl className={classes.root}>
-            <Grid container spacing ={4}> 
+    }
 
-            <TextField 
-            error
-            id="outlined-basic"
-            class="todo-input"
-            label="Todo List"
-            defaultValue="Wake Up!!"
-            helperText="Take a nap"
-            variant="outlined"
-            
-            />
-            <Button variant="contained"
-            color="Primary"
-            class="todo-button"
-            type="submit">
-                 Submit
-            </Button>
-            
-                <FormControl variant="outlined" className={classes.FormControl}>
-                    <InputLabel htmlFor="outlined-status-native-simple">Status</InputLabel>
-                    <Select
-                        native
-                        value={statement.status}
-                        onChange ={handleChange}
-                        label="Status"
-                        inputProps={{
-                            name: 'status',
-                            id: 'outlined-status-native-simple',
-                        }}
-                    >
-                        <option aria-label="None" value=""/>
-                        <option value = "Complete">Complete</option>
-                        <option value ="Uncomplete">Uncomplete</option>
-
-                    </Select> 
-
-
-                </FormControl>
-
-            </Grid>
-        </FormControl>
-
+    return (
+        <form>
+            <input value={inputText}
+            onChange={inputTextHandler} 
+            type="text" 
+            className="todo-input" />
+            <button onClick={submitTodoHandler} className="todo-button" type="submit">
+                <i className="fas fa-plus-square"></i>
+            </button>
+            <div className="select">
+                <select onChange={statusHandler} name="todo" className="filter-todo">
+                    <option value="all">All</option>
+                    <option value="completed">Completed</option>
+                    <option value="uncomplete">Uncomplete</option>
+                </select>
+            </div>
+        </form>
     );
-}
+} ;
 
 export default Form;
